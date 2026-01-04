@@ -76,6 +76,10 @@
 #define MAX_BCL_LVL_COUNT     3
 #define IPC_LOGPAGES          10
 
+#ifndef MAX
+#define MAX(X, Y) ((X) > (Y) ? (X) : (Y))
+#endif
+
 #define BCL_IPC(dev, msg, args...)      do { \
 			if ((dev) && (dev)->ipc_log) { \
 				ipc_log_string((dev)->ipc_log, \
@@ -889,13 +893,7 @@ static int bcl_version_init(struct bcl_device *bcl_perph)
 
 static void bcl_configure_bcl_peripheral(struct bcl_device *bcl_perph)
 {
-	struct device_node *np;
 	bcl_write_register(bcl_perph, BCL_MONITOR_EN, BIT(7));
-
-	np = of_find_node_by_name(NULL, "bcl-ibat");
-	if (np) {
-		bcl_write_register(bcl_perph, 0x59, 0x7E);
-	}
 }
 
 static int bcl_remove(struct platform_device *pdev)
